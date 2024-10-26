@@ -1,3 +1,8 @@
+if (!require(ggplot2)) install.packages("ggplot2")
+if (!require(tidyr)) install.packages("tidyr")
+if (!require(dplyr)) install.packages("dplyr")
+if (!require(readr)) install.packages("readr")
+
 library(ggplot2)
 library(tidyr)
 library(dplyr)
@@ -266,11 +271,7 @@ mvp <- function(data, percentiles, selected_methods, plot = FALSE, weights = NUL
     cat("percentile: ", sprintf("%6.2f", result_values), "\n", sep = "")
   }
   
-  if (plot) {
-    # Define method groups
-    normal_methods <- c("normal.cdf", "normal.est")
-    ecdf_methods <- c("inv.ecdf", "inv.ecdf.AD", "nearest.os", "inv.wt.ecdf.AD")
-    
+  if (plot) {    
     # Base plot with X and Y axis labels
     p <- ggplot() + 
       labs(x = "Percentile", y = "") +
@@ -295,7 +296,7 @@ mvp <- function(data, percentiles, selected_methods, plot = FALSE, weights = NUL
     )
     
     # Create a sequence of percentiles for plotting
-    plot_percentiles <- seq(0, 100, by = 1)
+    plot_percentiles <- seq(0, 100, by = 0.01)
     
     # Plot each selected method
     for (i in seq_along(selected_methods)) {
@@ -338,15 +339,16 @@ mvp <- function(data, percentiles, selected_methods, plot = FALSE, weights = NUL
       )
       
       # Highlight points and add vertical and horizontal dashed lines
+      # Only annotate the percentage on the x-axis if only 1 method is provided
       if (length(selected_methods) == 1){
         p <- p +  geom_text(data = highlight_data, aes(x = Value, y = -8, label = round(Value, 2)), 
-                            vjust = -1, hjust = 0.5, size = 3, color = "black")  # Annotate the Value on the Y axis
+                            vjust = -1, hjust = 0.5, size = 3, color = "black")  # Annotate the percentage on the x axis
       }
       
       p <- p + 
         geom_point(data = highlight_data, aes(x = Value, y = Percentile, color = Method)) +  # Highlight percentile points
         geom_text(data = highlight_data, aes(x = min(sorted_data) - 7, y = Percentile + 2, label = round(Percentile, 1)), 
-                  vjust = 1.5, hjust = 0.5, size = 3, color = "black") +  # Annotate the Percentile on the X axis
+                  vjust = 1.5, hjust = 0.5, size = 3, color = "black") +  # Annotate the Percentile on the y axis
         geom_segment(data = highlight_data, aes(x = Value, xend = Value, y = 0, yend = Percentile), 
                      linetype = "dashed", color = "black") +
         geom_segment(data = highlight_data, 
@@ -363,7 +365,7 @@ mvp <- function(data, percentiles, selected_methods, plot = FALSE, weights = NUL
                      arrow = arrow(type = "closed", length = unit(0.15, "cm"))) 
     }
     
-    # Manually define the colors and legend labels
+    # Define the colors and legend labels
     p <- p + scale_color_manual(values = colors, labels = legend_labels) +
       theme(legend.position = "bottom", legend.title = element_blank())
     
