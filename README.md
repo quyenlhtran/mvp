@@ -21,15 +21,9 @@ Percentiles are essential statistical measures that indicate the value below whi
 
 ## 🚀 Installation
 
-You can install the **MVP** package directly from GitHub:
+You can install the **MVP** package directly from this respiratory.
 
-```r
-# First, install devtools if you haven’t already
-install.packages("devtools")
-
-# Then, install MVP from GitHub
-devtools::install_github("quyenlhtran/mvp")
-```
+---
 
 ## 🔍 Usage
 
@@ -49,6 +43,7 @@ methods <- c("inv.ecdf", "pli.UM")
 
 mvp(data, percentiles, selected_methods = methods, plot = TRUE)
 ```
+---
 
 ## 🙏 Acknowledgments
 I would like to thank **Dr. Mamunur Rashid** for facilitating this research and for this constant encouragement.
